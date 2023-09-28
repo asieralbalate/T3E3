@@ -1,5 +1,3 @@
-
-
 import java.io.ObjectInputStream
 import java.io.FileInputStream
 import javax.xml.parsers.DocumentBuilderFactory
@@ -21,51 +19,51 @@ fun main(args: Array<String>) {
             val e = f.readObject () as Ruta
             val rut = doc.createElement ("ruta")
 
+
             val nom = doc.createElement ("nom")
             nom.appendChild(doc.createTextNode(e.nom)) // forma llarga: afegim un fill que és un node de text
             rut.appendChild(nom)
 
-            val desn = doc.createElement("desnivell")
-            desn.setTextContent(e.desnivell.toString()) // forma curta: amb setTextContent() li posem contingut
-            rut.appendChild(desn)
+            val des = doc.createElement("desnivell")
+            des.setTextContent(e.desnivell.toString()) // forma curta: amb setTextContent() li posem contingut
+            rut.appendChild(des)
 
-            val desnAc = doc.createElement("desnivellAcumulat")
-            desnAc.setTextContent(e.desnivellAcumulat.toString())
-            rut.appendChild(desnAc)
+            val decAcu = doc.createElement("desnivellAcumulat")
+            decAcu.setTextContent(e.desnivellAcumulat.toString())
+            rut.appendChild(decAcu)
 
             val punts = doc.createElement ("punts")
             val numPunts = e.size()
-            for (i in 0 until numPunts) {
+            for(i in 0 until numPunts){
                 val punt = doc.createElement("punt")
                 punt.setAttribute("num", Integer.toString(i+1))
                 punts.appendChild(punt)
 
-                val nom = doc.createElement ("nom")
-                nom.setTextContent(e.getPuntNom(i))// forma llarga: afegim un fill que és un node de text
+                val nom = doc.createElement("nom")
+                nom.setTextContent(e.getPuntNom(i))
                 punt.appendChild(nom)
 
-                val latitud = doc.createElement ("latitud")
-                nom.setTextContent(e.getPuntLatitud(i).toString())// forma llarga: afegim un fill que és un node de text
-                punt.appendChild(latitud)
+                val lat = doc.createElement("latitud")
+                lat.setTextContent(e.getPuntLatitud(i).toString())
+                punt.appendChild(lat)
 
-                val longitud = doc.createElement ("longitud")
-                nom.setTextContent(e.getPuntLongitud(i).toString())
-                punt.appendChild(longitud)
-
+                val long = doc.createElement("longitud")
+                long.setTextContent(e.getPuntLongitud(i ).toString())
+                punt.appendChild(long)
                 punts.appendChild(punt)
             }
 
             arrel.appendChild(rut)
-            arrel.appendChild(punts)
+            rut.appendChild(punts)
         }
 
     } catch (eof: EOFException) {
         f.close();
     }
     val trans = TransformerFactory.newInstance().newTransformer()
+
     trans.setOutputProperty(OutputKeys.INDENT, "yes")
     trans.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2")
-
     trans.transform(DOMSource(doc), StreamResult("Rutes.xml"))
 }
 
